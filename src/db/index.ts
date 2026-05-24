@@ -1,8 +1,12 @@
 import { Pool } from "pg";
 import config from "../config";
 
+
+const connStr = config.connection_string;
+const isLocal = connStr.includes('localhost') || connStr.includes('127.0.0.1');
 export const pool = new Pool({
-    connectionString: config.connection_string
+    connectionString: config.connection_string,
+    ssl: isLocal ? false : { rejectUnauthorized: false },
 })
 export const initDB = async () => {
     await pool.query(`
